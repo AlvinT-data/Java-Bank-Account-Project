@@ -9,7 +9,7 @@ public class CheckPaneL extends JFrame{
         addWindowListener(listener);
     }
 
-    private class FrameListener extends WindowAdapter
+    private static class FrameListener extends WindowAdapter
     {
         public void windowClosing(WindowEvent e) {
             int confirm;

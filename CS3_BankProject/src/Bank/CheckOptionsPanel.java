@@ -7,14 +7,7 @@ import java.awt.event.*;
  * the CheckOptionsPanel class enables an object editing the user interface including buttons, background, etc.
  */
 public class CheckOptionsPanel extends CheckPaneL {
-//    private final JLabel prompt;
-//    private final JRadioButton enter_trans;
-//    private final JRadioButton list_trans;
-//    private final JRadioButton list_check;
-//    private final JRadioButton list_dep;
-//    private final JRadioButton list_serv;
-//    private final JRadioButton open_file;
-//    private final JRadioButton save_file;
+    // declaring variables used for JFrame
     public static final int WIDTH = 300;
     public static final int HEIGHT = 200;
     private JMenu fileMenu, accMenu, tranMenu;

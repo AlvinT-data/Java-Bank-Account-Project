@@ -11,7 +11,6 @@ public class CheckingAccount extends Account {
     /**
      * the CheckingAccount class enables an object that represents
      * a user's checking account in a bank system
-     *
      * @param initialBalance is the initialize balance in a new account
      */
     public CheckingAccount(String name, double initialBalance) {
@@ -88,6 +87,10 @@ public class CheckingAccount extends Account {
         }
     }
 
+    /**
+     * insert a new transaction into transList
+     * @param newTrans is a new transaction
+     */
     public void addTrans(Transaction newTrans) { // adds a transaction object to the transList
         transList.add(newTrans);
     }

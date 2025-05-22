@@ -30,7 +30,6 @@ public class Main {
         ta.setFont(new Font("Monospaced",Font.PLAIN, 12));
         // Set Frame
         frame = new CheckOptionsPanel("Transaction Options");
-        // frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(ta);
         frame.pack();
         frame.setVisible(true);
@@ -263,6 +262,9 @@ public class Main {
         msg += "Total Service Charge: $" + fmt.format(total_charge) + "\n";
         JOptionPane.showMessageDialog(null, msg);
     }
+    /**
+     * print out all transactions table
+     */
     public static void showTransTable() {
         if (dataStore.isEmpty())
             JOptionPane.showMessageDialog(null, "You must select an account first.");
@@ -289,6 +291,9 @@ public class Main {
         }
         ta.setText(msg);
     }
+    /**
+     * print out check transactions table
+     */
     public static void showCheckTable() {
         if (dataStore.isEmpty())
             JOptionPane.showMessageDialog(null, "You must select an account first.");
@@ -311,6 +316,9 @@ public class Main {
         // Adjust the tab size and set to monospace
         ta.setText(msg);
     }
+    /**
+    * print out deposit transactions table
+    */
     public static void showDepTable() {
         if (dataStore.isEmpty())
             JOptionPane.showMessageDialog(null, "You must select an account first.");
@@ -334,7 +342,10 @@ public class Main {
         }
         ta.setText(msg);
     }
-    // print out service charge table
+
+    /**
+     * print out service charge table
+    */
     public static void showServTable() {
         if (dataStore.isEmpty())
             JOptionPane.showMessageDialog(null, "You must select an account first.");
@@ -356,6 +367,9 @@ public class Main {
         ta.setText(msg);
     }
 
+    /**
+     * Method for opening files
+     */
     public static void readAccounts()
     {
         int confirm;
@@ -388,6 +402,10 @@ public class Main {
             user_acc = dataStore.get(0);
         }
     }
+
+    /**
+     * Method for saving files
+     */
     public static void writeAccounts()
     {
         chooseFile(2);
@@ -404,6 +422,7 @@ public class Main {
             System.out.println(e);
         }
     }
+
     public static void chooseFile(int ioOption)
     {
         int status, confirm;
@@ -432,6 +451,10 @@ public class Main {
         dataStore.add(user_acc);
         ta.setText("New account added for " + name);
     }
+
+    /**
+     * find existing account by user name
+     */
     public static void findAcc() {
         String name = getAccName();
         // prevent accessing empty list
@@ -448,6 +471,10 @@ public class Main {
         }
         ta.setText("Account not found for " + name + "\n");
     }
+
+    /**
+     * List all existing accounts information
+     */
     public static void listAcc() {
         // prevent accessing empty list
         if (dataStore.isEmpty())
