@@ -12,6 +12,7 @@ public class CheckOptionsPanel extends CheckPaneL {
     private final JRadioButton list_trans;
     private final JRadioButton list_check;
     private final JRadioButton list_dep;
+    private final JRadioButton list_serv;
     private final JRadioButton open_file;
     private final JRadioButton save_file;
 
@@ -28,7 +29,7 @@ public class CheckOptionsPanel extends CheckPaneL {
         list_check = new JRadioButton("List All Checks");
         list_check.setBackground(Color.green);
         list_dep = new JRadioButton("List All Deposits");
-        list_dep.setBackground(Color.green);
+        list_serv = new JRadioButton("List All Service Charges");
         open_file = new JRadioButton("Open File");
         save_file = new JRadioButton("Save File");
         ButtonGroup group = new ButtonGroup();
@@ -36,6 +37,7 @@ public class CheckOptionsPanel extends CheckPaneL {
         group.add(list_trans);
         group.add(list_check);
         group.add(list_dep);
+        group.add(list_serv);
         group.add(open_file);
         group.add(save_file);
 
@@ -45,6 +47,7 @@ public class CheckOptionsPanel extends CheckPaneL {
         list_trans.addActionListener(listener);
         list_check.addActionListener(listener);
         list_dep.addActionListener(listener);
+        list_serv.addActionListener(listener);
         open_file.addActionListener(listener);
         save_file.addActionListener(listener);
         // add the components to the JPanel
@@ -53,6 +56,7 @@ public class CheckOptionsPanel extends CheckPaneL {
         add(list_trans);
         add(list_check);
         add(list_dep);
+        add(list_serv);
         add(open_file);
         add(save_file);
         setBackground(Color.yellow);
@@ -75,6 +79,9 @@ public class CheckOptionsPanel extends CheckPaneL {
             }
             else if (source == list_dep){
                 Main.showDepTable();
+            }
+            else if (source == list_serv){
+                Main.showServTable();
             }
             else if (source == open_file) {
                 Main.readAccounts();

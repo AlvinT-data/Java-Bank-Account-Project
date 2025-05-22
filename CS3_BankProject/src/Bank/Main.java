@@ -350,17 +350,13 @@ public class Main {
     }
     // print out service charge table
     public static void showServTable() {
-        String msg = "List All Deposits\n";
+        String msg = "List All Service Charges\n";
         msg += "Name: " + user_acc.getName() + "\n\n";
-        msg += "ID\t\tCash\t\tCheck\t\tAmount\n";
+        msg += "ID\t\tAmount\n";
         for (int i = 0; i < user_acc.gettransCount(); i++) {
             Transaction temp = user_acc.getTrans(i);
             if (temp.getTransNumber() == 3) {
                 msg += temp.getTransId() + "\t\t";
-                msg += "$" + fmt.format(((Deposit)temp).getCashAmt());
-                msg += (((Deposit)temp).getCashAmt()<10) ? "\t\t": "\t";
-                msg += "$" + fmt.format(((Deposit)temp).getCheckAmt());
-                msg += (((Deposit)temp).getCheckAmt()<10) ? "\t\t": "\t";
                 msg += "$" + fmt.format(temp.getTransAmount());
                 msg += "\n";
             }
