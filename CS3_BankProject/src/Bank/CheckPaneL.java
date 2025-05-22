@@ -1,11 +1,12 @@
 package Bank;
 import javax.swing.*;
 import java.awt.event.*;
-public class CheckPaneL extends JPanel{
+public class CheckPaneL extends JFrame{
     /** Creates a new instance of JFrameL */
-    public CheckPaneL(JFrame frame) {
-        frame.addWindowListener(new FrameListener());
-
+    public CheckPaneL(String title) {
+        super(title);
+        FrameListener listener = new FrameListener();
+        addWindowListener(listener);
     }
 
     private class FrameListener extends WindowAdapter

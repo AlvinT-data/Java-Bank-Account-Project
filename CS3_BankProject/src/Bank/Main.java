@@ -15,31 +15,29 @@ public class Main {
     //a CheckingAccount object to keep track of the account information
     public static CheckingAccount user_acc;
     //JFrame
-    public static JFrame frame;
+    public static CheckOptionsPanel frame;
+    // JTextArea
+    public static JTextArea ta;
     //saving
     public static boolean saved = false;
     public static Vector<CheckingAccount> dataStore;
     public static String filename = "/Users/alvin/Downloads/Testing";
     public static void main(String[] args) {
-        // defines local variables
-        double balance; String name;
+        // a vector to store all checking accounts
         dataStore = new Vector<CheckingAccount>();
-        // get account name from the user
-        name = getAccName();
-        // get initial balance from the user
-        balance = getAccBalance();
-        user_acc = new CheckingAccount(name, balance);
-        dataStore.add(user_acc);
+        // Set JTextArea
+        ta = new JTextArea(10, 50);
+        ta.setFont(new Font("Monospaced",Font.PLAIN, 12));
         // Set Frame
-        frame = new JFrame ("Transaction Options");
-        frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
-        CheckOptionsPanel panel = new CheckOptionsPanel(frame);
-        frame.getContentPane().add (panel);
+        frame = new CheckOptionsPanel("Transaction Options");
+        // frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().add(ta);
         frame.pack();
         frame.setVisible(true);
-
     }
     public static void enter_transaction() {
+        if (dataStore.isEmpty())
+            JOptionPane.showMessageDialog(null, "You must select an account first.");
         int tCode = getTransCode();
         if(tCode == 0) {
             showEndMessage();
@@ -234,7 +232,7 @@ public class Main {
             msg += "$" + fmt.format(Math.abs(curr_balance)) + "\n";
         }
         msg += "ServiceCharge: Check --- charge $0.15\n";
-        if (!user_acc.getMonthlyCheckingCharge()) {
+        if (!user_acc.getMonthlyCheckingCharge() && user_acc.getBalance() < 500) {
             msg += "Service Charge: Below $500 --- charge $5.00\n";
         }
         if (curr_balance < 50.0) {
@@ -266,14 +264,19 @@ public class Main {
         JOptionPane.showMessageDialog(null, msg);
     }
     public static void showTransTable() {
+        if (dataStore.isEmpty())
+            JOptionPane.showMessageDialog(null, "You must select an account first.");
         String msg = "List All Transactions\n";
-        msg += "Name: " + user_acc.getName() + "\n\n";
-        msg += "ID\t\tType\t\t\tAmount\n";
+        msg += "Name: " + user_acc.getName() + "\n";
+        msg += "Balance: " + ((user_acc.getBalance()>=0) ? "$" + fmt.format(user_acc.getBalance()) :
+                "($" + fmt.format(Math.abs(user_acc.getBalance())) + ")") + "\n";
+        msg += "Total Service Charge: $" + fmt.format(user_acc.getServiceCharge()) + "\n\n";
+        msg += "ID\tType\t\tAmount\n";
         for (int i = 0; i < user_acc.gettransCount(); i++) {
             Transaction temp = user_acc.getTrans(i);
-            msg += temp.getTransId() + "\t\t";
+            msg += temp.getTransId() + "\t";
             if (temp.getTransNumber() == 1) {
-                msg += "Check" + "\t\t\t";
+                msg += "Check" + "\t\t";
             }
             else if (temp.getTransNumber() ==2) {
                 msg += "Deposit" + "\t\t";
@@ -284,93 +287,73 @@ public class Main {
             msg += "$" + fmt.format(temp.getTransAmount());
             msg += "\n";
         }
-        // Adjust the tab size and set to monospace
-        JTextArea textArea = new JTextArea(msg);
-        textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        textArea.setTabSize(3);
-        textArea.setEditable(false);
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setPreferredSize(new Dimension(250, 200));  // set window size
-        JOptionPane.showMessageDialog(null, scrollPane);
+        ta.setText(msg);
     }
     public static void showCheckTable() {
+        if (dataStore.isEmpty())
+            JOptionPane.showMessageDialog(null, "You must select an account first.");
         String msg = "List All Checks\n";
-        msg += "Name: " + user_acc.getName() + "\n\n";
-
-        msg += "ID\t\tCheck\t\tAmount\n";
+        msg += "Name: " + user_acc.getName() + "\n";
+        msg += "Balance: " + ((user_acc.getBalance()>=0) ? "$" + fmt.format(user_acc.getBalance()) :
+                "($" + fmt.format(Math.abs(user_acc.getBalance())) + ")") + "\n";
+        msg += "Total Service Charge: $" + fmt.format(user_acc.getServiceCharge()) + "\n\n";
+        msg += "ID\tCheck\t\tAmount\n";
         for (int i = 0; i < user_acc.gettransCount(); i++) {
             Transaction temp = user_acc.getTrans(i);
             if (temp.getTransNumber() == 1) {
-                msg += temp.getTransId() + "\t\t";
+                msg += temp.getTransId() + "\t";
                 msg += ((Check)temp).getCheckNumber();
-                msg += (((Check)temp).getCheckNumber()<100) ? "\t\t\t": "\t\t";
+                msg += (((Check)temp).getCheckNumber()<100) ? "\t\t": "\t\t";
                 msg += "$" + fmt.format(temp.getTransAmount());
                 msg += "\n";
             }
         }
         // Adjust the tab size and set to monospace
-        JTextArea textArea = new JTextArea(msg);
-        textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        textArea.setTabSize(3);
-        textArea.setEditable(false);
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setPreferredSize(new Dimension(180, 200));  // set window size
-        JOptionPane.showMessageDialog(null, scrollPane);
+        ta.setText(msg);
     }
     public static void showDepTable() {
+        if (dataStore.isEmpty())
+            JOptionPane.showMessageDialog(null, "You must select an account first.");
         String msg = "List All Deposits\n";
-        msg += "Name: " + user_acc.getName() + "\n\n";
-        msg += "ID\t\tCash\t\tCheck\t\tAmount\n";
+        msg += "Name: " + user_acc.getName() + "\n";
+        msg += "Balance: " + ((user_acc.getBalance()>=0) ? "$" + fmt.format(user_acc.getBalance()) :
+                "($" + fmt.format(Math.abs(user_acc.getBalance())) + ")") + "\n";
+        msg += "Total Service Charge: $" + fmt.format(user_acc.getServiceCharge()) + "\n\n";
+        msg += "ID\tCash\tCheck\tAmount\n";
         for (int i = 0; i < user_acc.gettransCount(); i++) {
             Transaction temp = user_acc.getTrans(i);
             if (temp.getTransNumber() == 2) {
-                msg += temp.getTransId() + "\t\t";
+                msg += temp.getTransId() + "\t";
                 msg += "$" + fmt.format(((Deposit)temp).getCashAmt());
-                msg += (((Deposit)temp).getCashAmt()<10) ? "\t\t": "\t";
+                msg += (((Deposit)temp).getCashAmt()<10) ? "\t": "\t";
                 msg += "$" + fmt.format(((Deposit)temp).getCheckAmt());
-                msg += (((Deposit)temp).getCheckAmt()<10) ? "\t\t": "\t";
+                msg += (((Deposit)temp).getCheckAmt()<10) ? "\t": "\t";
                 msg += "$" + fmt.format(temp.getTransAmount());
                 msg += "\n";
             }
         }
-        // Adjust the tab size and set to monospace
-        JTextArea textArea = new JTextArea(msg);
-        textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        textArea.setTabSize(3);
-        textArea.setEditable(false);
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setPreferredSize(new Dimension(250, 200));  // set window size
-        JOptionPane.showMessageDialog(null, scrollPane);
+        ta.setText(msg);
     }
     // print out service charge table
     public static void showServTable() {
+        if (dataStore.isEmpty())
+            JOptionPane.showMessageDialog(null, "You must select an account first.");
         String msg = "List All Service Charges\n";
-        msg += "Name: " + user_acc.getName() + "\n\n";
-        msg += "ID\t\tAmount\n";
+        msg += "Name: " + user_acc.getName() + "\n";
+        msg += "Balance: " + ((user_acc.getBalance()>=0) ? "$" + fmt.format(user_acc.getBalance()) :
+                "($" + fmt.format(Math.abs(user_acc.getBalance())) + ")") + "\n";
+        msg += "Total Service Charge: $" + fmt.format(user_acc.getServiceCharge()) + "\n\n";
+        msg += "ID\tAmount\n";
         for (int i = 0; i < user_acc.gettransCount(); i++) {
             Transaction temp = user_acc.getTrans(i);
             if (temp.getTransNumber() == 3) {
-                msg += temp.getTransId() + "\t\t";
+                msg += temp.getTransId() + "\t";
                 msg += "$" + fmt.format(temp.getTransAmount());
                 msg += "\n";
             }
         }
-        // Adjust the tab size and set to monospace
-        JTextArea textArea = new JTextArea(msg);
-        textArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        textArea.setTabSize(3);
-        textArea.setEditable(false);
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setPreferredSize(new Dimension(250, 200));  // set window size
-        JOptionPane.showMessageDialog(null, scrollPane);
+        // Print on JTextArea
+        ta.setText(msg);
     }
 
     public static void readAccounts()
@@ -392,7 +375,6 @@ public class Main {
             dataStore = (Vector<CheckingAccount>)in.readObject();
             in.close();
             saved = true;
-            //CheckingAccount.setNumOfElements(dataStore.size());
         }
         catch(ClassNotFoundException e)
         {
@@ -440,4 +422,44 @@ public class Main {
             filename = file.getPath();
         }
     }
+    public static void addAcc() {
+        double balance; String name;
+        // get account name from the user
+        name = getAccName();
+        // get initial balance from the user
+        balance = getAccBalance();
+        user_acc = new CheckingAccount(name, balance);
+        dataStore.add(user_acc);
+        ta.setText("New account added for " + name);
+    }
+    public static void findAcc() {
+        String name = getAccName();
+        // prevent accessing empty list
+        if (dataStore.isEmpty()) {
+            ta.setText("Account not found for " + name + "\n");
+            return;
+        }
+        for (int i=0; i<dataStore.size(); i++) {
+            if (dataStore.get(i).getName().equals(name)) {
+                ta.setText("Account found for " + name + "\n");
+                user_acc = dataStore.get(i);
+                return;
+            }
+        }
+        ta.setText("Account not found for " + name + "\n");
+    }
+    public static void listAcc() {
+        // prevent accessing empty list
+        if (dataStore.isEmpty())
+            return;
+        String msg = "List of All Accounts:\n\n";
+        for (int i=0; i<dataStore.size(); i++) {
+            msg += "Name: " + dataStore.get(i).getName() + "\n";
+            msg += "Balance: " + ((dataStore.get(i).getBalance()>=0) ? "$" + fmt.format(dataStore.get(i).getBalance()) :
+                    "($" + fmt.format(Math.abs(dataStore.get(i).getBalance())) + ")") + "\n";
+            msg += "Total Service Charge: $" + fmt.format(dataStore.get(i).getServiceCharge()) + "\n\n";
+        }
+        ta.setText(msg);
+    }
+
 }

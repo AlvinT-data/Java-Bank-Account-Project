@@ -1,93 +1,116 @@
 package Bank;
 import javax.swing.*;
-import java.awt.*;
+import javax.swing.event.MenuListener;
 import java.awt.event.*;
 
 /**
  * the CheckOptionsPanel class enables an object editing the user interface including buttons, background, etc.
  */
 public class CheckOptionsPanel extends CheckPaneL {
-    private final JLabel prompt;
-    private final JRadioButton enter_trans;
-    private final JRadioButton list_trans;
-    private final JRadioButton list_check;
-    private final JRadioButton list_dep;
-    private final JRadioButton list_serv;
-    private final JRadioButton open_file;
-    private final JRadioButton save_file;
+//    private final JLabel prompt;
+//    private final JRadioButton enter_trans;
+//    private final JRadioButton list_trans;
+//    private final JRadioButton list_check;
+//    private final JRadioButton list_dep;
+//    private final JRadioButton list_serv;
+//    private final JRadioButton open_file;
+//    private final JRadioButton save_file;
+    public static final int WIDTH = 300;
+    public static final int HEIGHT = 200;
+    private JMenu fileMenu, accMenu, tranMenu;
+    private JMenuItem enter_trans,list_trans,list_check, add_acc,
+            list_dep,list_serv, find_acc, list_acc, open_file, save_file;
+    private JMenuBar bar;
 
-    public CheckOptionsPanel(JFrame frame) {
-        super(frame);
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+    public CheckOptionsPanel(String title) {
+        super(title);
+        setSize(WIDTH, HEIGHT);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        prompt = new JLabel("Choose action:");
-        prompt.setFont(new Font("Helvetica", Font.BOLD, 24));
-        enter_trans = new JRadioButton("Enter Transaction");
-        enter_trans.setBackground(Color.green);
-        list_trans = new JRadioButton("List All Transaction");
-        list_trans.setBackground(Color.green);
-        list_check = new JRadioButton("List All Checks");
-        list_check.setBackground(Color.green);
-        list_dep = new JRadioButton("List All Deposits");
-        list_serv = new JRadioButton("List All Service Charges");
-        open_file = new JRadioButton("Open File");
-        save_file = new JRadioButton("Save File");
-        ButtonGroup group = new ButtonGroup();
-        group.add(enter_trans);
-        group.add(list_trans);
-        group.add(list_check);
-        group.add(list_dep);
-        group.add(list_serv);
-        group.add(open_file);
-        group.add(save_file);
+        fileMenu = new JMenu("File");
+        MenuListener ml = new MenuListener();
+        open_file = new JMenuItem("Open File");
+        open_file.addActionListener(ml);
+        fileMenu.add(open_file);
+        save_file = new JMenuItem("Save File");
+        save_file.addActionListener(ml);
+        fileMenu.add(save_file);
 
-        //Listener
-        EOptionListener listener = new EOptionListener();
-        enter_trans.addActionListener(listener);
-        list_trans.addActionListener(listener);
-        list_check.addActionListener(listener);
-        list_dep.addActionListener(listener);
-        list_serv.addActionListener(listener);
-        open_file.addActionListener(listener);
-        save_file.addActionListener(listener);
-        // add the components to the JPanel
-        add(prompt);
-        add(enter_trans);
-        add(list_trans);
-        add(list_check);
-        add(list_dep);
-        add(list_serv);
-        add(open_file);
-        add(save_file);
-        setBackground(Color.yellow);
-        setPreferredSize(new Dimension(350, 160));
+        accMenu = new JMenu("Accounts");
+        add_acc = new JMenuItem("Add New Account");
+        add_acc.addActionListener(ml);
+        accMenu.add(add_acc);
+
+        list_trans = new JMenuItem("List All Transactions");
+        list_trans.addActionListener(ml);
+        accMenu.add(list_trans);
+
+        list_check = new JMenuItem("List All Checks");
+        list_check.addActionListener(ml);
+        accMenu.add(list_check);
+
+        list_dep = new JMenuItem("List All Deposits");
+        list_dep.addActionListener(ml);
+        accMenu.add(list_dep);
+
+        list_serv = new JMenuItem("List All Service Charges");
+        list_serv.addActionListener(ml);
+        accMenu.add(list_serv);
+
+        find_acc = new JMenuItem("Find An Account");
+        find_acc.addActionListener(ml);
+        accMenu.add(find_acc);
+
+        list_acc = new JMenuItem("List All Accounts");
+        list_acc.addActionListener(ml);
+        accMenu.add(list_acc);
+
+        tranMenu = new JMenu("Transactions");
+        enter_trans = new JMenuItem("Enter Transaction");
+        enter_trans.addActionListener(ml);
+        tranMenu.add(enter_trans);
+
+        bar = new JMenuBar( );
+        bar.add(fileMenu);
+        bar.add(accMenu);
+        bar.add(tranMenu);
+        setJMenuBar(bar);
     }
 
-    private class EOptionListener implements ActionListener {
+    private class MenuListener implements ActionListener {
         // Calls the method to process the option for which radio
         // button was pressed.
         public void actionPerformed(ActionEvent event) {
-            Object source = event.getSource();
-            if (source == enter_trans) {
+            String source = event.getActionCommand();
+            if (source.equals("Enter Transaction")) {
                 Main.enter_transaction();
             }
-            else if (source == list_trans) {
+            else if (source.equals("List All Transactions")) {
                 Main.showTransTable();
             }
-            else if (source == list_check) {
+            else if (source.equals("List All Checks")) {
                 Main.showCheckTable();
             }
-            else if (source == list_dep){
+            else if (source.equals("List All Deposits")){
                 Main.showDepTable();
             }
-            else if (source == list_serv){
+            else if (source.equals("List All Service Charges")) {
                 Main.showServTable();
             }
-            else if (source == open_file) {
+            else if (source.equals("Open File")) {
                 Main.readAccounts();
             }
-            else {
+            else if (source.equals("Save File")) {
                 Main.writeAccounts();
+            }
+            else if (source.equals("Add New Account")) {
+                Main.addAcc();
+            }
+            else if (source.equals("Find An Account")) {
+                Main.findAcc();
+            }
+            else { // source.equals("List All Accounts")
+                Main.listAcc();
             }
         }
     }
