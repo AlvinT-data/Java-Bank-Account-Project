@@ -19,7 +19,7 @@ public class CheckPaneL extends JFrame{
                         "Would you like to save it before exiting the application?";
                 confirm = JOptionPane.showConfirmDialog (null, message);
                 if (confirm == JOptionPane.YES_OPTION)
-                    Main.chooseFile(2);
+                    Main.writeAccounts();
             }
             System.exit(0);
         }

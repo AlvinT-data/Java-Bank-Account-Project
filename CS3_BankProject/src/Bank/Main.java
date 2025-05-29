@@ -8,7 +8,7 @@ import java.text.DecimalFormat;
 import java.awt.*;
 import java.io.*;
 import java.util.Vector;
-
+// Fix saved, set false when new transactions added
 public class Main {
     // set number displaying format with two decimal places
     public static DecimalFormat fmt = new DecimalFormat("0.00");
@@ -45,6 +45,7 @@ public class Main {
             int checkNumber = getCheckNumber();
             double transAmount = getTransAmt();
             processCheck(transAmount, checkNumber);
+            saved = false;
         }
         else if(tCode == 2) {
             double cashAmt, checkAmt;
@@ -75,6 +76,7 @@ public class Main {
                         cashAmt = (cash.isEmpty()) ? 0.0 : Double.parseDouble(cash);
                         checkAmt = (check.isEmpty()) ? 0.0 : Double.parseDouble(check);
                         processDeposit(cashAmt, checkAmt);
+                        saved = false;
                         return;
                     }
                 } catch (NumberFormatException e) {
@@ -401,6 +403,7 @@ public class Main {
         if (!dataStore.isEmpty()) {
             user_acc = dataStore.get(0);
         }
+        saved = true;
     }
 
     /**
@@ -450,6 +453,7 @@ public class Main {
         user_acc = new CheckingAccount(name, balance);
         dataStore.add(user_acc);
         ta.setText("New account added for " + name);
+        saved = false;
     }
 
     /**
